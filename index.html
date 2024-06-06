@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+            text-align: center;
+        }
+        input, button {
+            margin: 10px;
+            padding: 10px;
+            font-size: 1em;
+        }
+        .results {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Statistics Calculator</h1>
+    <input type="text" id="numbers" placeholder="Enter numbers separated by commas">
+    <button onclick="calculate()">Calculate</button>
+    
+    <div class="results">
+        <p id="mean"></p>
+        <p id="median"></p>
+        <p id="stddev"></p>
+        <p id="iqr"></p>
+    </div>
+
+    <script>
+        function calculate() {
+            const input = document.getElementById('numbers').value;
+            const numbers = input.split(',').map(Number);
+
+            if (numbers.some(isNaN)) {
+                alert('Please enter valid numbers separated by commas');
+                return;
+            }
+
+            const mean = numbers.reduce((acc, val) => acc + val, 0) / numbers.length;
+
+            const sortedNumbers = numbers.slice().sort((a, b) => a - b);
+            const middle = Math.floor(sortedNumbers.length / 2);
+            const median = sortedNumbers.length % 2 === 0 ? (sortedNumbers[middle - 1] + sortedNumbers[middle]) / 2 : sortedNumbers[middle];
+
+            const variance = numbers.reduce((acc, val) => acc + Math.pow(val - mean, 2), 0) / numbers.length;
+            const stddev = Math.sqrt(variance);
+
+            const q1 = sortedNumbers[Math.floor(sortedNumbers.length / 4)];
+            const q3 = sortedNumbers[Math.ceil(sortedNumbers.length * (3 / 4)) - 1];
+            const iqr = q3 - q1;
+
+            document.getElementById('mean').textContent = `Mean: ${mean.toFixed(2)}`;
+            document.getElementById('median').textContent = `Median: ${median}`;
+            document.getElementById('stddev').textContent = `Standard Deviation: ${stddev.toFixed(2)}`;
+            document.getElementById('iqr').textContent = `Interquartile Range: ${iqr}`;
+        }
+    </script>
+</body>
+</html>
